@@ -15,7 +15,7 @@ struct ContentView: View {
     
     
     func resetImageState() {
-        return withAnimation(.linear(duration: 1)) {
+        return withAnimation(.linear(duration: 0.5)) {
             imageScale = 1
             imageOffset = .zero
         }
@@ -25,6 +25,8 @@ struct ContentView: View {
         NavigationView {
             
             ZStack{
+                
+                Color.clear
                 //MARK: - PAGE IMAGE
                 Image("magazine-front-cover")
                     .resizable()
@@ -64,15 +66,21 @@ struct ContentView: View {
                             })
                     )
 
-                    
             }//: ZSTACK
-            
             .navigationTitle("Pinch & Zoom")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 isAnimating = true
             }
+            .overlay(InfoPanelView(scale: imageScale, offset: imageOffset)
+                .padding(.horizontal)
+                .padding(.top,30)
+                ,alignment: .top
+            )
+            
+            
         } //: NVAIGATION VIEW
+        .navigationViewStyle(.stack)
         
     }
 }
