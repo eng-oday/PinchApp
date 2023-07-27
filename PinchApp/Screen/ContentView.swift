@@ -12,6 +12,8 @@ struct ContentView: View {
     @State var isAnimating:Bool             = false
     @State var imageScale:CGFloat           = 1
     @State var imageOffset:CGSize           = .zero
+    @State var isDrawerOpen:Bool            = false
+    @State var DrawerImage:String           = "chevron.compact.left"
     
     
     func resetImageState() {
@@ -94,6 +96,8 @@ struct ContentView: View {
                 
 
             }//: ZSTACK
+            
+            
             .navigationTitle("Pinch & Zoom")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
@@ -101,12 +105,14 @@ struct ContentView: View {
             }
             
 
+        // MARK:  INFO PANEL
             .overlay(InfoPanelView(scale: imageScale, offset: imageOffset)
                 .padding(.horizontal)
                 .padding(.top,30)
                 ,alignment: .top
             )
             
+        // MARK:  CONTROLE PANEL
             .overlay(
                 Group {
                     HStack {
@@ -121,12 +127,12 @@ struct ContentView: View {
                             }
                         } label: {
                             ControlImageView(icon: "minus.magnifyingglass")
-                        }
+                        } // MINUS BUTTON
                         Button {
                             resetImageState()
                         } label: {
                             ControlImageView(icon: "arrow.up.left.and.down.right.magnifyingglass")
-                        }
+                        } // RESET BUTTON
                         
                         Button {
                             
@@ -141,18 +147,47 @@ struct ContentView: View {
                             
                         } label: {
                             ControlImageView(icon: "plus.magnifyingglass")
-                        }
+                        } // PLUS BUTTON
 
                     }
                     .padding(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
                     .background(.ultraThinMaterial)
                     .cornerRadius(12)
                     .opacity(isAnimating ? 1 : 0)
-             }
+             } // MAGNIFICATION VIEW
                 .padding(.bottom,30)
                 ,alignment: .bottom
             )
             
+        // MARK:  PAGE TUMBNAIL
+            
+            .overlay (
+                HStack{
+                    Image(systemName: isDrawerOpen ? "chevron.compact.right" : "chevron.compact.left")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 40)
+                        .padding(8)
+                        .foregroundColor(.secondary)
+                    
+                        .onTapGesture {
+                            withAnimation(.easeOut) {
+                                isDrawerOpen.toggle()
+                            }
+                        }
+                    
+                    Spacer()
+                } // PAGE THUMBNAIL VIEW
+                    .padding(EdgeInsets(top: 16, leading: 8, bottom: 16, trailing: 8))
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(12)
+                    .opacity(isAnimating ? 1 : 0 )
+                    .frame(width:260)
+                    .padding(.top , UIScreen.main.bounds.height / 12)
+                    .offset(x:isDrawerOpen ? 20 : 215)
+                , alignment : .topTrailing
+                
+            )
             
             
             
